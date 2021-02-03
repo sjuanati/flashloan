@@ -21,8 +21,10 @@ contract FlashloanProvider is ReentrancyGuard {
         address _token,
         bytes memory data // arbitrary data to be forwarded to the borrower
     ) external nonReentrant() {
-        IERC20 token = tokens[_token]; // pointer to the token to be lent | if we don't have the token, it will be 0
-        uint256 originalBalance = token.balanceOf(address(this)); // balance of the Flashloan provider
+        // pointer to the token to be lent | if we don't have the token, it will be 0
+        IERC20 token = tokens[_token];
+        // balance of the Flashloan provider
+        uint256 originalBalance = token.balanceOf(address(this));
         require(address(token) != address(0), "token not supported");
         require(originalBalance >= amount, "amount too high");
         token.transfer(callback, amount);

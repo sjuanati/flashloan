@@ -14,8 +14,20 @@ contract('Flashloan', (accounts) => {
         flashloanProvider = await FlashloanProvider.new([dai.address]);
         flashloanUser = await FlashloanUser.new();
 
-        // give DAIs to user
-        //await dai.mint(user, '10000000000000000000');
+        // transfer 1000 DAIs to Flashloan contract
+        await dai.faucet(flashloanProvider.address, web3.utils.toWei('1000'));
+        const balanceFlashloan = await dai.balanceOf(flashloanProvider.address);
+        console.log('Balance in Flashloan:', balanceFlashloan.toString());
+
+        // call flashloan
+        await flashloanUser.startFlashloan(
+            flashloanProvider.address,
+            web3.utils.toWei('1000'),
+            dai.address,
+            //web3.utils.fromAscii('testing'),
+            { from: user }
+        );
+
     });
 
     it('should launch flashloan', async () => {
