@@ -7,16 +7,19 @@ import './IFlashloanUser.sol';
 
 contract FlashloanUser is IFlashloanUser {
 
+    bytes public output;
+
     function startFlashloan(
         address flashloan,
         uint amount,
-        address token
+        address token,
+        bytes memory data
     ) external {
         FlashloanProvider(flashloan).executeFlashloan(
             address(this),
             amount,
             token,
-            bytes('Sergi')
+            data
         );
     }
 
@@ -26,7 +29,8 @@ contract FlashloanUser is IFlashloanUser {
         bytes memory data
     ) override external {
         // do some arbitrage, liquidation, etc.
-        // Reimburse borrowen tokens
+        output = data;
+        // Reimburse borrowed tokens to Flashloan contract
         IERC20(token).transfer(msg.sender, amount);
     }
 }

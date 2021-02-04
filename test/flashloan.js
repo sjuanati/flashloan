@@ -7,6 +7,7 @@ contract('Flashloan', (accounts) => {
     let flashloanProvider;
     let flashloanUser;
     let dai;
+    const INPUT = 'Sergi'
 
     beforeEach(async () => {
         // contract instances
@@ -19,19 +20,22 @@ contract('Flashloan', (accounts) => {
         const balanceFlashloan = await dai.balanceOf(flashloanProvider.address);
         console.log('Balance in Flashloan:', balanceFlashloan.toString());
 
+    });
+
+    it('should update the output', async () => {
+
         // call flashloan
         await flashloanUser.startFlashloan(
             flashloanProvider.address,
             web3.utils.toWei('1000'),
             dai.address,
-            //web3.utils.fromAscii('testing'),
+            web3.utils.fromAscii(INPUT),
             { from: user }
         );
 
-    });
-
-    it('should launch flashloan', async () => {
-        assert(1 === 1);
+        // check output in flashloan user contract
+        const textAfter = await flashloanUser.output();
+        assert(web3.utils.toAscii(textAfter) === INPUT);
     });
 
 });
