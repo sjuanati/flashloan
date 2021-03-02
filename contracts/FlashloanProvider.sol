@@ -1,25 +1,33 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.7.3;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import "./IFlashloanUser.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {IFlashloanUser} from "./IFlashloanUser.sol";
 
 contract FlashloanProvider is ReentrancyGuard {
     mapping(address => IERC20) public tokens;
 
-    // array with the addresses of all tokens we support
+    // array with the addresses of all supported tokens
     constructor(address[] memory _tokens) {
         for (uint256 i = 0; i < _tokens.length; i++) {
             tokens[_tokens[i]] = IERC20(_tokens[i]);
         }
     }
 
+    /**
+     * @notice  Borrow the amount to the contract caller
+     * @dev     If amount is not returned after the callback, the tx will revert
+     * @param   callback The contract address to send the token back
+     * @param   amount The amount to be borrowed
+     * @param   _token The token to be borrowed
+     * @param   data Arbitrary data to be forwarded to the borrower
+     */
     function executeFlashloan(
-        address callback, // address to send the token back
+        address callback,
         uint256 amount,
         address _token,
-        bytes memory data // arbitrary data to be forwarded to the borrower
+        bytes memory data
     ) external nonReentrant() {
         // pointer to the token to be lent | if we don't have the token, it will be 0
         IERC20 token = tokens[_token];
