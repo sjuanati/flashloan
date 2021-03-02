@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.7.3;
 
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+// import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "../aave-flashloan/interfaces/IERC20.sol";
 import {FlashloanProvider} from "./FlashloanProvider.sol";
 import {IFlashloanUser} from "./IFlashloanUser.sol";
 
